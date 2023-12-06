@@ -1,53 +1,69 @@
 import 'dart:io';
-import 'dart:async';
 
 class Calculator {
-  double add(double a, double b) {
-    return a + b;
-  }
+  var a, b;
 
-  double subtract(double a, double b) {
-    return a - b;
-  }
+  Calculator(this.a, this.b);
 
-  double multiply(double a, double b) {
-    return a * b;
-  }
-
-  double divide(double a, double b) {
-    if (b == 0) {
-      throw ZeroDivisionError();
-      //I tried to run it on Dartpad.dev but it couldn't recognize the ZeroDivisonError
+  Future<void> calculate(String operation) async {
+    try {
+      var result;
+      switch (operation) {
+        case '+':
+          result = await addition();
+          break;
+        case '-':
+          result = await subtraction();
+          break;
+        case '*':
+          result = await multiplication();
+          break;
+        case '/':
+          result = await division();
+          break;
+        default:
+          throw Exception("Invalid operation, Try again!!!");
+      }
+      print("The result is: $result");
+    } catch (err) {
+      print("Error: $err");
     }
-    return a / b;
+  }
+
+  Future<num> addition() async {
+    return await Future.delayed(Duration(seconds: 5), () => a + b);
+  }
+
+  Future<num> subtraction() async {
+    return await Future.delayed(Duration(seconds: 5), () => a - b);
+  }
+
+  Future<num> multiplication() async {
+    return await Future.delayed(Duration(seconds: 5), () => a * b);
+  }
+
+  Future<num> division() async {
+    if (b == 0) {
+      throw Exception(
+          "opps!!! Zero division error! Can't divide a number by zero!");
+    } else {
+      return await Future.delayed(Duration(seconds: 5), () => a / b);
+    }
   }
 }
 
-void main() async {
-  try {
-    var calculator = Calculator();
+void main() {
+  stdout.write("Enter the 1st number: ");
+  String? input = stdin.readLineSync();
+  num num1 = input != null && input.isNotEmpty ? num.parse(input) : 0;
 
-    // To get user input for two numbers
-    print('Enter the first number:');
-    var a = double.parse(stdin.readLineSync());
-    print('Enter the second number:');
-    var b = double.parse(stdin.readLineSync());
-    //i had difficulty in being able to use "stdin" this too was not recognized by Dartpad.dev
+  print("Enter basic operation : + , - , * , /");
+  String? operation = stdin.readLineSync();
 
-    var sum = calculator.add(a, b);
-    var difference = calculator.subtract(a, b);
-    var product = calculator.multiply(a, b);
-    var quotient = calculator.divide(a, b);
+  stdout.write("Enter the 2nd number: ");
+  String? input2 = stdin.readLineSync();
+  num num2 = input2 != null && input2.isNotEmpty ? num.parse(input2) : 0;
 
-    // Delay for 5 seconds before printing the result
-    await Future.delayed(Duration(seconds: 5));
-
-    // Printing the result for all operations
-    print('Sum: $sum');
-    print('Difference: $difference');
-    print('Product: $product');
-    print('Quotient: $quotient');
-  } catch (e) {
-    print('Error: $e');
-  }
+  Calculator c = Calculator(num1, num2);
+  c.calculate(operation!);
 }

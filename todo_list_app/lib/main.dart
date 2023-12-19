@@ -50,31 +50,75 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
+  @override
+  _TasksPageState createState() => _TasksPageState();
+}
+
+class _TasksPageState extends State<TasksPage> {
+  List<Map<String, dynamic>> tasks = [
+    {
+      'title': 'Task 1',
+      'description': 'Description for Task 1',
+      'dueDate': '2023-12-20',
+    },
+    // Add more tasks as needed
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tasks'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Display tasks here
-            Text(
-              'Tasks List',
-              style: TextStyle(fontSize: 24),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/createTask');
-              },
-              child: Text('Create Task'),
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: tasks.length,
+        itemBuilder: (context, index) {
+          return TaskCard(
+            title: tasks[index]['title'],
+            description: tasks[index]['description'],
+            dueDate: tasks[index]['dueDate'],
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/taskDetail',
+                arguments: tasks[index],
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/createTask');
+        },
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+class TaskCard extends StatelessWidget {
+  final String title;
+  final String description;
+  final String dueDate;
+  final VoidCallback onTap;
+
+  TaskCard({
+    required this.title,
+    required this.description,
+    required this.dueDate,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(8),
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(description),
+        onTap: onTap,
       ),
     );
   }
@@ -123,13 +167,8 @@ class CreateTaskPage extends StatelessWidget {
 class TaskDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Extract task details from arguments
-    // For simplicity, let's use placeholder values
-    final Map<String, dynamic> taskDetails = {
-      'title': 'Sample Task',
-      'description': 'Sample description for the task.',
-      'dueDate': '2023-12-31',
-    };
+    final Map<String, dynamic> taskDetails =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     return Scaffold(
       appBar: AppBar(

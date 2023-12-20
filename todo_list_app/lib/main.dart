@@ -62,6 +62,16 @@ class _TasksPageState extends State<TasksPage> {
       'description': 'Description for Task 1',
       'dueDate': '2023-12-20',
     },
+    {
+      'title': 'Task 2',
+      'description': 'Description for Task 2',
+      'dueDate': '2023-12-20',
+    },
+    {
+      'title': 'Task 3',
+      'description': 'Description for Task 3',
+      'dueDate': '2023-12-20',
+    },
     // Add more tasks as needed
   ];
 
@@ -145,7 +155,7 @@ class CreateTaskPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             TextField(
-              maxLines: 3,
+              maxLines: 1,
               decoration: InputDecoration(labelText: 'Description'),
             ),
             SizedBox(height: 20),
